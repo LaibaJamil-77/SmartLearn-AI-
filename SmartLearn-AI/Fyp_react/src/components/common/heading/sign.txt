@@ -1,0 +1,380 @@
+// import { useState } from "react"
+// import { FaGoogle, FaFacebook } from "react-icons/fa"
+
+// const SignupForm = ({ setCurrentView, toggleForm }) => {
+//   const [formData, setFormData] = useState({
+//     firstName: "",
+//     lastName: "",
+//     email: "",
+//     password: "",
+//     confirmPassword: "",
+//   })
+//   const [errorMessage, setErrorMessage] = useState("")
+//   const [loading, setLoading] = useState(false)
+
+//   const handleChange = (e) => {
+//     const { name, value } = e.target
+//     setFormData((prev) => ({
+//       ...prev,
+//       [name]: value,
+//     }))
+//   }
+
+//   const handleSubmit = async (e) => {
+//     e.preventDefault()
+//     setErrorMessage("")
+//     setLoading(true)
+
+//     if (formData.password !== formData.confirmPassword) {
+//       setErrorMessage("Passwords do not match")
+//       setLoading(false)
+//       return
+//     }
+
+//     try {
+//       // First, check if the email is already registered
+//       const checkResponse = await fetch("http://localhost:8000/check-email", {
+//         method: "POST",
+//         headers: {
+//           "Content-Type": "application/json",
+//         },
+//         body: JSON.stringify({ email: formData.email }),
+//       })
+
+//       if (!checkResponse.ok) {
+//         const errorData = await checkResponse.json()
+//         throw new Error(errorData.detail || "Email check failed")
+//       }
+
+//       // If email is available, proceed with registration
+//       const response = await fetch("http://localhost:8000/register", {
+//         method: "POST",
+//         headers: {
+//           "Content-Type": "application/json",
+//         },
+//         body: JSON.stringify({
+//           username: formData.email,
+//           email: formData.email,
+//           password: formData.password,
+//           first_name: formData.firstName,
+//           last_name: formData.lastName,
+//           avatar_index: 0, // Default avatar index
+//         }),
+//       })
+
+//       if (!response.ok) {
+//         const errorData = await response.json()
+//         throw new Error(errorData.detail || "Registration failed")
+//       }
+
+//       const data = await response.json()
+//       console.log("Registration success:", data)
+      
+//       // Show success message
+//       alert("Registration successful! Please login to continue.")
+      
+//       // Switch to login view
+//       setCurrentView("login")
+//     } catch (error) {
+//       console.error("Registration error:", error)
+//       setErrorMessage(error.message)
+//     } finally {
+//       setLoading(false)
+//     }
+//   }
+
+//   return (
+//     <div className="auth-form">
+//       <h2>Create Account</h2>
+//       <p className="auth-subtitle">Join SmartLearn AI and start your learning journey</p>
+
+//       <form onSubmit={handleSubmit}>
+//         <div className="form-row">
+//           <div className="form-group">
+//             <label>First Name</label>
+//             <input
+//               type="text"
+//               name="firstName"
+//               placeholder="John"
+//               required
+//               value={formData.firstName}
+//               onChange={handleChange}
+//             />
+//           </div>
+//           <div className="form-group">
+//             <label>Last Name</label>
+//             <input
+//               type="text"
+//               name="lastName"
+//               placeholder="Doe"
+//               required
+//               value={formData.lastName}
+//               onChange={handleChange}
+//             />
+//           </div>
+//         </div>
+//         <div className="form-group">
+//           <label>Email Address</label>
+//           <input
+//             type="email"
+//             name="email"
+//             placeholder="john@example.com"
+//             required
+//             value={formData.email}
+//             onChange={handleChange}
+//           />
+//         </div>
+//         <div className="form-group">
+//           <label>Password</label>
+//           <input
+//             type="password"
+//             name="password"
+//             placeholder="••••••••"
+//             required
+//             minLength={8}
+//             value={formData.password}
+//             onChange={handleChange}
+//           />
+//           <p className="password-hint">Must be at least 8 characters long</p>
+//         </div>
+//         <div className="form-group">
+//           <label>Confirm Password</label>
+//           <input
+//             type="password"
+//             name="confirmPassword"
+//             placeholder="••••••••"
+//             required
+//             minLength={8}
+//             value={formData.confirmPassword}
+//             onChange={handleChange}
+//           />
+//         </div>
+//         {errorMessage && <p className="error-message">{errorMessage}</p>}
+//         <div className="terms-checkbox">
+//           <input type="checkbox" id="terms" required />
+//           <label htmlFor="terms">
+//             I agree to the{" "}
+//             <button type="button" className="link-button" onClick={() => alert("Terms of Service coming soon!")}>
+//               Terms of Service
+//             </button>{" "}
+//             and{" "}
+//             <button type="button" className="link-button" onClick={() => alert("Privacy Policy coming soon!")}>
+//               Privacy Policy
+//             </button>
+//           </label>
+//         </div>
+//         <button type="submit" className="auth-button" disabled={loading}>
+//           {loading ? "Creating Account..." : "Create Account"}
+//         </button>
+//       </form>
+
+//       <div className="divider">
+//         <span>or continue with</span>
+//       </div>
+
+//       <div className="social-auth-grid">
+//         <button className="social-button google">
+//           <FaGoogle /> Google
+//         </button>
+//         <button className="social-button facebook">
+//           <FaFacebook /> Facebook
+//         </button>
+//       </div>
+
+//       <p className="switch-form">
+//         Already have an account?
+//         <button type="button" onClick={toggleForm} className="switch-button">
+//           Sign in
+//         </button>
+//       </p>
+
+//       <button type="button" onClick={() => setCurrentView("landing")} className="back-to-home">
+//         Back to Home
+//       </button>
+//     </div>
+//   )
+// }
+
+// export default SignupForm 
+
+
+import { useState } from "react"
+import { FaGoogle, FaFacebook } from "react-icons/fa"
+
+const SignupForm = ({ setCurrentView, toggleForm }) => {
+  const [formData, setFormData] = useState({
+    firstName: "",
+    lastName: "",
+    email: "",
+    password: "",
+    confirmPassword: "",
+  })
+  const [errorMessage, setErrorMessage] = useState("")
+  const [loading, setLoading] = useState(false)
+
+  const handleChange = (e) => {
+    const { name, value } = e.target
+    setFormData((prev) => ({
+      ...prev,
+      [name]: value,
+    }))
+  }
+
+  const handleSubmit = async (e) => {
+    e.preventDefault()
+    setErrorMessage("")
+    setLoading(true)
+
+    if (formData.password !== formData.confirmPassword) {
+      setErrorMessage("Passwords do not match")
+      setLoading(false)
+      return
+    }
+
+    try {
+      const response = await fetch("http://localhost:8000/register", {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+        },
+        body: JSON.stringify({
+          username: formData.email,
+          email: formData.email,
+          password: formData.password,
+          first_name: formData.firstName,
+          last_name: formData.lastName,
+          avatar_index: 0, // Default avatar index
+        }),
+      })
+
+      if (!response.ok) {
+        const errorData = await response.json()
+        throw new Error(errorData.detail || "Registration failed")
+      }
+
+      const data = await response.json()
+      console.log("Registration success:", data)
+
+      alert("Registration successful! Please login to continue.")
+      setCurrentView("login")
+    } catch (error) {
+      console.error("Registration error:", error)
+      setErrorMessage(error.message)
+    } finally {
+      setLoading(false)
+    }
+  }
+
+  return (
+    <div className="auth-form">
+      <h2>Create Account</h2>
+      <p className="auth-subtitle">Join SmartLearn AI and start your learning journey</p>
+
+      <form onSubmit={handleSubmit}>
+        <div className="form-row">
+          <div className="form-group">
+            <label>First Name</label>
+            <input
+              type="text"
+              name="firstName"
+              placeholder="John"
+              required
+              value={formData.firstName}
+              onChange={handleChange}
+            />
+          </div>
+          <div className="form-group">
+            <label>Last Name</label>
+            <input
+              type="text"
+              name="lastName"
+              placeholder="Doe"
+              required
+              value={formData.lastName}
+              onChange={handleChange}
+            />
+          </div>
+        </div>
+        <div className="form-group">
+          <label>Email Address</label>
+          <input
+            type="email"
+            name="email"
+            placeholder="john@example.com"
+            required
+            value={formData.email}
+            onChange={handleChange}
+          />
+        </div>
+        <div className="form-group">
+          <label>Password</label>
+          <input
+            type="password"
+            name="password"
+            placeholder="••••••••"
+            required
+            minLength={8}
+            value={formData.password}
+            onChange={handleChange}
+          />
+          <p className="password-hint">Must be at least 8 characters long</p>
+        </div>
+        <div className="form-group">
+          <label>Confirm Password</label>
+          <input
+            type="password"
+            name="confirmPassword"
+            placeholder="••••••••"
+            required
+            minLength={8}
+            value={formData.confirmPassword}
+            onChange={handleChange}
+          />
+        </div>
+        {errorMessage && <p className="error-message">{errorMessage}</p>}
+        <div className="terms-checkbox">
+          <input type="checkbox" id="terms" required />
+          <label htmlFor="terms">
+            I agree to the{" "}
+            <button type="button" className="link-button" onClick={() => alert("Terms of Service coming soon!")}>
+              Terms of Service
+            </button>{" "}
+            and{" "}
+            <button type="button" className="link-button" onClick={() => alert("Privacy Policy coming soon!")}>
+              Privacy Policy
+            </button>
+          </label>
+        </div>
+        <button type="submit" className="auth-button" disabled={loading}>
+          {loading ? "Creating Account..." : "Create Account"}
+        </button>
+      </form>
+
+      <div className="divider">
+        <span>or continue with</span>
+      </div>
+
+      <div className="social-auth-grid">
+        <button className="social-button google">
+          <FaGoogle /> Google
+        </button>
+        <button className="social-button facebook">
+          <FaFacebook /> Facebook
+        </button>
+      </div>
+
+      <p className="switch-form">
+        Already have an account?
+        <button type="button" onClick={toggleForm} className="switch-button">
+          Sign in
+        </button>
+      </p>
+
+      <button type="button" onClick={() => setCurrentView("landing")} className="back-to-home">
+        Back to Home
+      </button>
+    </div>
+  )
+}
+
+export default SignupForm
